@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 040ec0f7dfe31644db7269cabb041202, type: 3}
+  m_Name: Farmer
+  m_EditorClassIdentifier: Assembly-CSharp::GOADAgentConfiguration
+  initialBools:
+  - key: IsFull
+    value: 1
+  - key: GetMoney
+    value: 0
+  - key: HasFood
+    value: 1
+  goals:
+  - name: SellHarvest
+    priority: 2
+    desireBools:
+    - key: GetMoney
+      value: 1
+    - key: IsFull
+      value: 0
+  - name: Eat
+    priority: 1
+    desireBools:
+    - key: IsFull
+      value: 1

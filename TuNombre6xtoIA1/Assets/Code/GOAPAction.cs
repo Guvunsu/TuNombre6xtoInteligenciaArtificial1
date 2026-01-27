@@ -4,7 +4,7 @@ using UnityEngine;
 
 //sera la clase base para todas las acciones del GOAP
 //Cada accion tiene: coste, prediccion, y efectos
-public class GOAPAction : MonoBehaviour
+public abstract class GOAPAction : MonoBehaviour
 {
     public float cost = 1f;
     protected Dictionary<string, object> preconditions = new Dictionary<string, object>();

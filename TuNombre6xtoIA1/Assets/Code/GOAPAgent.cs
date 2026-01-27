@@ -1,29 +1,54 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting.ReorderableList.Element_Adder_Menu;
+
 public class GOAPAgent : MonoBehaviour
 {
-    public WorldState worldState = new WorldState();
-    private List<GOAPAction> actions = new List<GOAPAction>();
-    private List<GOAPAction> goals = new List<GOAPAction>();
+    [Header("Configuration")]
+    [SerializeField]
+    GOADAgentConfiguration configuration;
 
-    private GOAPPlaner goapPlanner = new GOAPPlaner();
+    public WorldState worldState = new WorldState();
+
+    private List<GOAPAction> actions = new List<GOAPAction>();
+    private List<GOAPGoal> goals = new List<GOAPGoal>();
+
+    private GOAPPlaner planner = new GOAPPlaner();
     private Queue<GOAPAction> currentPlan;
 
+    //public bool autoReplan = false;
+    void ApplyConfiguration()
+    {
+        if (configuration == null)
+        {
+            Debug.LogWarning("There is no GOADConfiguration assigned");
+            return;
+        }
+        //definimos el estado inicial
+        worldState.Clear();
+        foreach (var element in configuration.initialBools)
+        {
+            worldState[element.key] = element.value;
+        }
+
+        //definimos los goals
+        goals.Clear();
+        foreach (var elementGoal in configuration.goals)
+        {
+            var g = new GOAPGoal(elementGoal.name, elementGoal.priority);
+            foreach (var kv in elementGoal.desireBools)
+            {
+                goals.Add(g);
+            }
+        }
+
+    }
+    private void Awake()
+    {
+        actions.AddRange(GetComponents<GOAPAction>());
+    }
     void Start()
     {
-        //1) estado inicial
-        worldState["HasFood"] = false;
-        worldState["IsFull"] = false;
-
-        //2) obtengo mis accciones disponibles 
-        actions.AddRange(GetComponents<GOAPAction>());
-
-        //3) creamos el goal: isFull = true 
-        var eatGoal = new GOAPGoal("Eat", 1f);
-        eatGoal.DesiredState["IsFull"] = true;
-        goals.Add(eatGoal);
-
-        //4) Planificar
         SetPlan();
     }
 
@@ -35,14 +60,20 @@ public class GOAPAgent : MonoBehaviour
             return;
         }
         GOAPGoal goal = goals[0];
-        currentPlan = planner.Plan(worldState, actions, goal);
-        if (currentPlan == null)
-        {
-            Debug.LogError("Agent: No se encontro plan para " + goal.Name);
-        } else Debug.LogError("Agent: plan creado para " + goal.Name);
+        currentPlan = planner.Plan(worldState, actions, goal); //creo que es goapPlanner.Plan
+
+        if (currentPlan == null) { Debug.Log("Agent: No se encontro plan para " + goal.Name); } else Debug.Log("Agent: plan creado para " + goal.Name);
     }
     private void Update()
     {
+        if (currentPlan == null || currentPlan.Count == 0)
+        {
+            //if (autoReplan)
+            //{
+            //}
+                SetPlan();
+                return;
+        }
 
         GOAPAction action = currentPlan.Peek();
 
