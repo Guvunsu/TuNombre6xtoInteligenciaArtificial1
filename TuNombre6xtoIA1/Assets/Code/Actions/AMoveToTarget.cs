@@ -11,17 +11,18 @@ public class AMoveToTarget : GOAPAction
 
     public string targetName;
 
-    private Animator animator;
-    private bool anim_started = false;
-
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+
+        // Buscamos el target en la escena
         target = GameObject.Find(targetName).transform;
 
-        AddEffects("AgentIsClose", true);
-        cost = 1;
+        AddEffect("AgentIsClose", true);
+
+        cost = 1f;
     }
+
     public override bool Perform(WorldState state)
     {
         if (!isMoving)
@@ -30,23 +31,24 @@ public class AMoveToTarget : GOAPAction
             agent.isStopped = false;
             agent.SetDestination(target.position);
             isMoving = true;
-            animator.SetBool("IsWalking", true);
-            anim_started = true;
         }
-        //el agente ya llego?
+
+        // El agente ya llegó?
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            Debug.Log("SM: IM HERE");
+            Debug.Log("SM: I am here!");
             agent.isStopped = true;
-            state["agentIsClose"] = true;
+            state["AgentIsClose"] = true;
             done = true;
-            animator.SetBool("IsWalking", false);
-            anim_started = false;
         }
+
         return done;
     }
-    public override bool IsDone()
+
+    public override void ResetAction()
     {
-        return done;
+        done = false;
     }
+
+    public override bool IsDone() { return done; }
 }

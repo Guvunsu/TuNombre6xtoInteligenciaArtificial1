@@ -3,29 +3,33 @@ using UnityEngine;
 public class AGetFood : GOAPAction
 {
     private bool done = false;
+
     private void Awake()
     {
-        AddPrecondition("AgentIsClose",true);
-        AddEffects("HasFood", true);
+        AddPrecondition("AgentIsClose", true);
+        AddEffect("HasFood", true);
         cost = 1f;
     }
+
     public override bool Perform(WorldState state)
     {
-        //throw new System.NotImplementedException();
         if (!done)
         {
             Debug.Log("SIM: NPC goes to get food");
-            //Aqui se pondria la logica de la accion
-            //ej: mover el personaje, abrir objeto, gastar dinero,animacion,vfx,etc
-
             state["HasFood"] = true;
             done = true;
         }
+
         return done;
     }
+
+    public override void ResetAction()
+    {
+        done = false;
+    }
+
     public override bool IsDone()
     {
-        //throw new System.NotImplementedException();
         return done;
     }
 }
