@@ -2,34 +2,49 @@ using UnityEngine;
 
 public class AGetFood : GOAPAction
 {
-    private bool done = false;
+    private Animator animator;
 
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+
+        duration = 10;
+
         AddPrecondition("AgentIsClose", true);
+
         AddEffect("HasFood", true);
+
         cost = 1f;
     }
 
-    public override bool Perform(WorldState state)
+    void ResetAnimations()
     {
-        if (!done)
-        {
-            Debug.Log("SIM: NPC goes to get food");
-            state["HasFood"] = true;
-            done = true;
-        }
-
-        return done;
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsSleeping", false);
+        animator.SetBool("IsWorking", false);
+        animator.SetBool("IsEating", false);
+        animator.SetBool("IsGetFood", true);
     }
 
-    public override void ResetAction()
+    protected override void OnStart(WorldState state)
     {
-        done = false;
+        Debug.Log("AGetFood: start");
+
+        if (animator == null) return;
+
+        state["AgentIsClose"] = false;
+        ResetAnimations();
+        animator.SetBool("IsGetFood", true);
     }
 
-    public override bool IsDone()
+    protected override void OnComplete(WorldState state)
     {
-        return done;
+        Debug.Log("AGetFood: complete");
+
+        if (animator != null)
+            animator.SetBool("IsGetFood", false);
+
+        state["AgentIsClose"] = true;
+        state["HasFood"] = true;
     }
 }

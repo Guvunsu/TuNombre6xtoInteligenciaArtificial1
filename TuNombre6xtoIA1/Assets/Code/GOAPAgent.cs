@@ -215,6 +215,14 @@ public class GOAPAgent : MonoBehaviour
 
     private void Update()
     {
+        //un debug rapido para ver que pex con mis acciones
+        Debug.Log("WORLD STATE:");
+        foreach (var kv in worldState)
+        {
+            Debug.Log(kv.Key + " = " + kv.Value);
+        }
+
+
         if (currentPlan == null || currentPlan.Count == 0)
         {
             SetPlan();
@@ -232,6 +240,12 @@ public class GOAPAgent : MonoBehaviour
         {
             Debug.Log("GoapAgent: acción completada -> " + action.GetType().Name);
             currentPlan.Dequeue();
+            //tarea 09 02 2026 loop para replantear el plan cuando este haya acabado con todos
+            if (currentPlan.Count == 0)
+            {
+                Debug.Log("GoapAgent: plan terminado, replanteando...");
+                SetPlan();
+            }
         }
     }
 

@@ -2,52 +2,51 @@ using UnityEngine;
 
 public class AEat : GOAPAction
 {
-    private bool done = false;
     private Animator animator;
-    private bool anim_started = false;
-
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
 
+        animator = GetComponent<Animator>();
+        duration = 3.33f;
+
+        AddPrecondition("AgentIsClose", true);
         AddPrecondition("HasFood", true);
-        AddPrecondition("IsFull", false);
 
         AddEffect("IsFull", true);
         AddEffect("HasFood", false);
+        AddEffect("IsTired", false);
 
         cost = 1f;
     }
-
-    public override bool Perform(WorldState state)
+    void ResetAnimations()
     {
-        if (!anim_started)
-        {
-            Debug.Log("Comiendo");
-            animator.SetBool("IsEating", true);
-            anim_started = true;
-        }
-
-        if (!done)
-        {
-            Debug.Log("SIM: NPC is eating");
-            state["IsFull"] = true;
-            state["HasFood"] = false;
-
-            done = true;
-        }
-
-        return done;
+        animator.SetBool("IsWalking", false);
+        animator.SetBool("IsSleeping", false);
+        animator.SetBool("IsWorking", false);
+        animator.SetBool("IsGetFood", false);
+        animator.SetBool("IsEating", true);
+    }
+    protected override void OnStart(WorldState state)
+    {
+        Debug.Log("AEat: start");
+        ResetAnimations();
+        if (animator != null) animator.SetBool("IsEating", true);
     }
 
-    public override void ResetAction()
+    protected override void OnTick(WorldState state, float t01, float elapsed)
     {
-        done = false;
+        // opcional: algo durante, sonido, UI, etc.
+        // Debug.Log($"AEat progress {t01:0.00}");
     }
 
-    public override bool IsDone()
+    protected override void OnComplete(WorldState state)
     {
-        return done;
+        Debug.Log("AEat: complete");
+        if (animator != null) animator.SetBool("IsEating", false);
+
+        state["IsFull"] = true;
+        state["HasFood"] = false;
+        state["IsTired"] = false;
     }
 }

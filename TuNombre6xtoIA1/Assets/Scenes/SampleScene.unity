@@ -840,8 +840,8 @@ GameObject:
   - component: {fileID: 410098251}
   - component: {fileID: 410098250}
   - component: {fileID: 410098249}
-  - component: {fileID: 410098248}
   - component: {fileID: 410098247}
+  - component: {fileID: 410098248}
   - component: {fileID: 410098246}
   - component: {fileID: 410098253}
   - component: {fileID: 410098252}
@@ -865,6 +865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AEat
   cost: 1
+  duration: 2.5
 --- !u!114 &410098247
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -878,7 +879,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AMoveToTarget
   cost: 1
-  targetName: Refigerador
+  duration: 0
+  targetName: WorkPoint
 --- !u!114 &410098248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -892,6 +894,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AHarvest
   cost: 1
+  duration: 3
 --- !u!114 &410098249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -980,6 +983,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AGetFood
   cost: 1
+  duration: 0
 --- !u!1 &484762332
 GameObject:
   m_ObjectHideFlags: 0
@@ -1532,7 +1536,7 @@ GameObject:
   m_Component:
   - component: {fileID: 741575810}
   m_Layer: 0
-  m_Name: Refigerador
+  m_Name: FoodPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1722,7 +1726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 823156643}
   m_Layer: 0
-  m_Name: Field
+  m_Name: WorkPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1855,6 +1859,7 @@ Transform:
   m_Children:
   - {fileID: 741575810}
   - {fileID: 823156643}
+  - {fileID: 1751912879}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963409403
@@ -2664,6 +2669,37 @@ Transform:
   - {fileID: 164460181}
   m_Father: {fileID: 145226329}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1751912878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1751912879}
+  m_Layer: 0
+  m_Name: SleepPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1751912879
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751912878}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.98, y: 0, z: 8.39}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 888587276}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1757701742
 GameObject:
   m_ObjectHideFlags: 0
@@ -3448,6 +3484,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AMoveToTarget
   cost: 1
+  duration: 0
   targetName: Refigerador
 --- !u!114 &919132148994611433
 MonoBehaviour:
@@ -3462,6 +3499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AHarvest
   cost: 1
+  duration: 0
 --- !u!114 &919132148994611434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3475,6 +3513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AGetFood
   cost: 1
+  duration: 0
 --- !u!114 &919132148994611435
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3488,6 +3527,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AEat
   cost: 1
+  duration: 0
 --- !u!114 &919132148994611436
 MonoBehaviour:
   m_ObjectHideFlags: 0
