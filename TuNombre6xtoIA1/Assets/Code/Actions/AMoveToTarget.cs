@@ -10,12 +10,14 @@ public class AMoveToTarget : GOAPAction
 
     //tarea 09 02 2026
     private Animator animator;
+    private UICanvasEmotions script_UICanvasEmotions;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         //tarea 09 02 2026
         animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
 
         // duration = 0 => no termina por tiempo, termina por CheckComplete()
         duration = 3f;

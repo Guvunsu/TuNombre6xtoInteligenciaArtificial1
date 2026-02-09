@@ -1,26 +1,24 @@
 ﻿using UnityEngine;
+using static UICanvasEmotions;
 
 public class ASleep : GOAPAction
 {
     private Animator animator;
-
+    private UICanvasEmotions script_UICanvasEmotions;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
+        duration = 7;
 
-        duration = 15f; // ⏱ tiempo de dormir
-
-        // Preconditions
         AddPrecondition("IsTired", true);
-        AddPrecondition("AgentIsClose", true); // cama / casa
+        AddPrecondition("AgentIsClose", true);
 
-        // Effects
         AddEffect("IsTired", false);
         AddEffect("IsRested", true);
 
         cost = 1f;
     }
-
     void ResetAnimations()
     {
         animator.SetBool("IsWalking", false);
@@ -29,7 +27,11 @@ public class ASleep : GOAPAction
         animator.SetBool("IsGetFood", false);
         animator.SetBool("IsSleeping", true);
     }
-
+    protected override void OnTick(WorldState state, float t01, float elapsed)
+    {
+        // opcional: algo durante, sonido, UI, etc.
+        // Debug.Log($"AEat progress {t01:0.00}");
+    }
     protected override void OnStart(WorldState state)
     {
         Debug.Log("ASleep: start");
@@ -39,7 +41,11 @@ public class ASleep : GOAPAction
         state["IsTired"] = false;
         state["AgentIsClose"] = false;
         ResetAnimations();
-        animator.SetBool("IsSleeping", true);
+        if (animator != null)
+        {
+            animator.SetBool("IsSleeping", true);
+            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.SADNESS);
+        }
     }
 
     protected override void OnComplete(WorldState state)
@@ -47,11 +53,11 @@ public class ASleep : GOAPAction
         Debug.Log("ASleep: complete");
 
         if (animator != null)
+        {
             animator.SetBool("IsSleeping", false);
-
-  
-        state["AgentIsClose"] = true; 
+            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+        }
+        state["AgentIsClose"] = true;
         state["IsTired"] = true;
-        //state["IsRested"] = true;
     }
 }
