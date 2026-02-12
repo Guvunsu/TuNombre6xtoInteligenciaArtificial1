@@ -9,7 +9,7 @@ public class UICanvasEmotions : MonoBehaviour
         BUSY
     }
     [Header("Referencia GOAPAction")]
-    [SerializeField] GOAPAgent script_GOAPAgent;
+    [SerializeField] GOADAgent script_GOADAgent;
 
     [Header("Canvas References")]
     public GameObject happinessImg;

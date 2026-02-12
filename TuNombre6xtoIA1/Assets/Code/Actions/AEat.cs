@@ -5,11 +5,17 @@ public class AEat : GOAPAction
 {
     private Animator animator;
     private UICanvasEmotions script_UICanvasEmotions;
+
+    public int foodConsumed = 1;
+    public float eatDuration = 0;
     private void Awake()
     {
         animator = GetComponent<Animator>();
         script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
-        duration = 3.33f;
+        duration = eatDuration;
+        AddNumericPrecondition("Food", CompareOp.GreaterOrEqual, foodConsumed);
+        AddEffect("IsFull", true);
+        AddNumericEffect("Food", EffectOp.Subtract, foodConsumed);
 
         AddPrecondition("AgentIsClose", true);
         AddPrecondition("HasFood", true);
@@ -52,7 +58,9 @@ public class AEat : GOAPAction
             //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
         }
         state["IsFull"] = true;
-        state["HasFood"] = false;
-        state["IsTired"] = false;
+      foreach(var e in NumericEffects)
+        {
+            e.Apply(state);
+        }
     }
 }
