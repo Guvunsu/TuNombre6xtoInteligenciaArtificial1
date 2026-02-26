@@ -81,4 +81,3 @@ public class AMoveToAgent : GOAPAction
         Debug.Log("Arrived to partner.");
     }
 }
-    

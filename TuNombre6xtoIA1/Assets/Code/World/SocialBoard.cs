@@ -5,7 +5,7 @@ public class SocialBoard : MonoBehaviour
 {
     public static SocialBoard Instance { get; private set; }
 
-    private readonly Dictionary<string, GOADAgent> agents = new();
+    private readonly Dictionary<string, GOAPAgent> agents = new();
     private readonly Dictionary<string, Queue<SocialMessage>> inbox = new();
 
     private void Awake()
@@ -20,7 +20,7 @@ public class SocialBoard : MonoBehaviour
         Debug.Log("[SocialBoard] Awake");
     }
 
-    public void Register(GOADAgent agent)
+    public void Register(GOAPAgent agent)
     {
         if (agent == null) return;
 
@@ -32,7 +32,7 @@ public class SocialBoard : MonoBehaviour
         Debug.Log($"[SocialBoard] Registered agentId={agent.agentId} (total={agents.Count})");
     }
 
-    public GOADAgent GetAgent(string id)
+    public GOAPAgent GetAgent(string id)
     {
         if (string.IsNullOrEmpty(id))
         {
@@ -68,7 +68,7 @@ public class SocialBoard : MonoBehaviour
     /// Convierte mensajes -> flags/datos en el WorldState del receptor.
     /// Esto es el puente Event -> State para que GOAP pueda reaccionar.
     /// </summary>
-    public void PumpInboxIntoWorldState(GOADAgent receiver)
+    public void PumpInboxIntoWorldState(GOAPAgent receiver)
     {
         if (receiver == null) return;
 
@@ -89,7 +89,8 @@ public class SocialBoard : MonoBehaviour
                 receiver.worldState["TradePartnerId"] = msg.fromAgentId;
                 receiver.worldState["TradePrice"] = msg.price;
                 receiver.worldState["TradeFoodAmount"] = msg.foodAmount;
-            } else if (msg.type == SocialMessageType.TradeAccepted)
+            }
+            else if (msg.type == SocialMessageType.TradeAccepted)
             {
                 receiver.worldState["TradeAcceptedByPartner"] = true;
                 receiver.worldState["TradePartnerId"] = msg.fromAgentId;
@@ -98,7 +99,7 @@ public class SocialBoard : MonoBehaviour
     }
 
     /// <summary>
-    /// Ejecuta el trade de forma at�mica:
+    /// Ejecuta el trade de forma atómica:
     /// buyer paga Money, seller entrega Food.
     /// </summary>
     public bool ExecuteTrade(string buyerId, string sellerId, int price, int foodAmount)

@@ -18,11 +18,11 @@ public class GOAPDebugSnapshot : MonoBehaviour
     [Header("Options")]
     public bool printSocialBoardAgentsList = true;
 
-    private GOADAgent self;
+    private GOAPAgent self;
 
     private void Awake()
     {
-        self = GetComponent<GOADAgent>();
+        self = GetComponent<GOAPAgent>();
     }
 
     private void Update()

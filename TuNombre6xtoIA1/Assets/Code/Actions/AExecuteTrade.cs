@@ -1,17 +1,17 @@
 ﻿// ===============================
 // AExecuteTrade.cs (CORREGIDO)
-// - Se ejecuta cuando est�s cerca y el partner ya acept�.
+// - Se ejecuta cuando estás cerca y el partner ya aceptó.
 // - Ejecuta el trade en SocialBoard y limpia flags para evitar quedarse pegado.
 // ===============================
 using UnityEngine;
 
 public class AExecuteTrade : GOAPAction
 {
-    private GOADAgent self;
+    private GOAPAgent self;
 
     private void Awake()
     {
-        self = GetComponent<GOADAgent>();
+        self = GetComponent<GOAPAgent>();
 
         duration = 0.2f;
         cost = 1f;
@@ -25,7 +25,7 @@ public class AExecuteTrade : GOAPAction
         // Para que el planner pueda ver que obtienes comida
         AddNumericEffect("Food", EffectOp.Add, 1);
 
-        // CLAVE: �consumir� el handshake para evitar loops en el planner
+        // CLAVE: “consumir” el handshake para evitar loops en el planner
         AddEffect("TradeAcceptedByPartner", false);
         AddEffect("IsNearPartner", false);
         AddEffect("TradeRequested", false);

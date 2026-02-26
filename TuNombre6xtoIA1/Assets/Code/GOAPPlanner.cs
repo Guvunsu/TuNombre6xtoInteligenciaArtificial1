@@ -1,4 +1,4 @@
-ï»¿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GOAPPlanner
@@ -26,13 +26,13 @@ public class GOAPPlanner
         // Copia del estado para simular
         WorldState currentState = CopyState(worldState);
 
-        // Si ya estï¿½ satisfecho, plan vacï¿½o es vï¿½lido
+        // Si ya está satisfecho, plan vacío es válido
         if (GoalSatisfied(currentState, goal.DesiredState))
             return new Queue<GOAPAction>();
 
         List<GOAPAction> plan = new List<GOAPAction>();
 
-        // Anti-loop: guarda una ï¿½firmaï¿½ del estado para detectar estancamiento
+        // Anti-loop: guarda una “firma” del estado para detectar estancamiento
         HashSet<string> visited = new HashSet<string>();
 
         for (int step = 0; step < MAX_STEPS; step++)
@@ -62,13 +62,13 @@ public class GOAPPlanner
                 if (!changesState && !action.allowNoStateChange)
                     continue;
 
-                // Heurï¿½stica simple:
+                // Heurística simple:
                 // - preferir acciones que cumplen partes del goal
                 // - preferir acciones que cambian estado (progreso real)
                 // - preferir costo bajo
                 int goalHits = CountGoalHits(action, goal);
                 float score =
-                    goalHits * 100f +              // prioridad mï¿½xima: acercarse al goal
+                    goalHits * 100f +              // prioridad máxima: acercarse al goal
                     (changesState ? 10f : -5f) +    // progreso > espera
                     (-action.cost);                 // menor costo = mejor
 
@@ -81,7 +81,7 @@ public class GOAPPlanner
 
             if (bestAction == null)
             {
-                Debug.LogWarning($"[{agentId}] Planner: No encontrï¿½ acciï¿½n aplicable en step={step}.");
+                Debug.LogWarning($"[{agentId}] Planner: No encontré acción aplicable en step={step}.");
                 return null;
             }
 

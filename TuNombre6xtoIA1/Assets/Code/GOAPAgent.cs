@@ -1,10 +1,10 @@
-ï»¿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
-public class GOADAgent : MonoBehaviour
+public class GOAPAgent : MonoBehaviour
 {
     [Header("Config")]
-    [SerializeField] private GOADAgentConfiguration config;
+    [SerializeField] private GOAPAgentConfig config;
 
     [Header("Identity")]
     public string agentId = "AgentA";
@@ -31,7 +31,8 @@ public class GOADAgent : MonoBehaviour
         {
             SocialBoard.Instance.Register(this);
             Debug.Log($"[{agentId}] Registrado en SocialBoard");
-        } else
+        }
+        else
         {
             Debug.LogError($"[{agentId}] SocialBoard.Instance es NULL");
         }
@@ -53,13 +54,13 @@ public class GOADAgent : MonoBehaviour
         }
 
         GOAPAction action = currentPlan.Peek();
-        Debug.Log($"[{agentId}] Ejecutando acciï¿½n: {action.GetType().Name}");
+        Debug.Log($"[{agentId}] Ejecutando acción: {action.GetType().Name}");
 
         bool done = action.Perform(worldState);
 
         if (done)
         {
-            Debug.Log($"[{agentId}] Acciï¿½n completada: {action.GetType().Name}");
+            Debug.Log($"[{agentId}] Acción completada: {action.GetType().Name}");
             currentPlan.Dequeue();
         }
     }
@@ -92,12 +93,12 @@ public class GOADAgent : MonoBehaviour
             Debug.Log($"[{agentId}] Goal cargado: {gdef.name}");
         }
 
-        // Defaults para claves de interacciï¿½n social (evita ContainsKey missing)
+        // Defaults para claves de interacción social (evita ContainsKey missing)
         if (!worldState.ContainsKey("TradePartnerId")) worldState["TradePartnerId"] = "";
         if (!worldState.ContainsKey("TradePrice")) worldState["TradePrice"] = 0;
         if (!worldState.ContainsKey("TradeFoodAmount")) worldState["TradeFoodAmount"] = 0;
 
-        // Tambiï¿½n es buena idea asegurar flags usados por precondiciones
+        // También es buena idea asegurar flags usados por precondiciones
         if (!worldState.ContainsKey("TradeRequested")) worldState["TradeRequested"] = false;
         if (!worldState.ContainsKey("TradeAcceptedByPartner")) worldState["TradeAcceptedByPartner"] = false;
         if (!worldState.ContainsKey("IsNearPartner")) worldState["IsNearPartner"] = false;
@@ -113,7 +114,7 @@ public class GOADAgent : MonoBehaviour
         GOAPGoal goal = ChooseGoal();
         if (goal == null)
         {
-            Debug.LogWarning($"[{agentId}] SetPlan: No goal activo (ï¿½ya satisfechos o no hay goals?)");
+            Debug.LogWarning($"[{agentId}] SetPlan: No goal activo (¿ya satisfechos o no hay goals?)");
             currentPlan = null;
             return;
         }
@@ -124,7 +125,7 @@ public class GOADAgent : MonoBehaviour
 
         if (currentPlan == null)
         {
-            Debug.LogWarning($"[{agentId}] SetPlan: planner devolviï¿½ NULL");
+            Debug.LogWarning($"[{agentId}] SetPlan: planner devolvió NULL");
             return;
         }
 

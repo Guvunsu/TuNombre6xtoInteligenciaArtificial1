@@ -1,4 +1,4 @@
-ï»¿// ===============================
+// ===============================
 // GOAPAction.cs (CORREGIDO)
 // - Agrega allowNoStateChange para permitir acciones tipo "Wait" que no cambian el estado.
 // ===============================
@@ -10,11 +10,11 @@ public abstract class GOAPAction : MonoBehaviour
     public float cost = 1f;
 
     [Header("Timing")]
-    [Tooltip("0 = termina solo por condiciï¿½n (CheckComplete). >0 = tambiï¿½n puede terminar por tiempo.")]
+    [Tooltip("0 = termina solo por condición (CheckComplete). >0 = también puede terminar por tiempo.")]
     public float duration = 0f;
 
     [Header("Planner")]
-    [Tooltip("Si es true, el planner puede elegir esta acciï¿½n aunque no cambie el estado (ï¿½til para Wait/Listen).")]
+    [Tooltip("Si es true, el planner puede elegir esta acción aunque no cambie el estado (útil para Wait/Listen).")]
     public bool allowNoStateChange = false;
 
     protected Dictionary<string, object> preconditions = new();

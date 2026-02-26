@@ -25,7 +25,7 @@ public class GoalDefinition
 }
 
 [CreateAssetMenu(fileName = "GOAPAgentConfig", menuName = "Scriptable Objects/GOAPAgentConfig")]
-public class GOADAgentConfiguration : ScriptableObject
+public class GOAPAgentConfig : ScriptableObject
 {
     [Header("Initial State (Bools)")]
     public List<BoolStateEntry> initialBools = new();

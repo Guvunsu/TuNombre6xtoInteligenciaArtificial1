@@ -1,17 +1,17 @@
 ﻿// ===============================
 // AAcceptTrade.cs (CORREGIDO)
-// - Al aceptar, env�a mensaje de aceptaci�n al partner.
+// - Al aceptar, envía mensaje de aceptación al partner.
 // - Pone TradeAccepted=true (sirve si el vendedor tiene goal "TradeAccepted=true").
 // ===============================
 using UnityEngine;
 
 public class AAcceptTrade : GOAPAction
 {
-    private GOADAgent self;
+    private GOAPAgent self;
 
     private void Awake()
     {
-        self = GetComponent<GOADAgent>();
+        self = GetComponent<GOAPAgent>();
 
         duration = 0.2f;
         cost = 1f;

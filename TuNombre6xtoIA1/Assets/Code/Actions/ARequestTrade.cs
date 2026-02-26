@@ -4,14 +4,14 @@ public class ARequestTrade : GOAPAction
 {
     [Header("Trade Settings")]
     public string sellerId = "AgentB";
-    public int price = 10;
+    public int price = 5;
     public int foodAmount = 1;
 
-    private GOADAgent self;
+    private GOAPAgent self;
 
     private void Awake()
     {
-        self = GetComponent<GOADAgent>();
+        self = GetComponent<GOAPAgent>();
 
         duration = 0.2f;
         cost = 1f;
@@ -19,16 +19,18 @@ public class ARequestTrade : GOAPAction
         AddPrecondition("TradeRequested", false);
 
         AddNumericPrecondition("Food", CompareOp.LessOrEqual, 0);
-        AddNumericPrecondition("Money", CompareOp.GreaterOrEqual, price = 10);
+        AddNumericPrecondition("Money", CompareOp.GreaterOrEqual, price);
 
-        // Para el planner (simulaci�n)
+        // Para el planner (simulación)
         AddEffect("TradeRequested", true);
         AddEffect("TradePartnerId", sellerId);
         AddEffect("TradePrice", price);
         AddEffect("TradeFoodAmount", foodAmount);
     }
 
-    protected override void OnStart(WorldState state)
+    protected override void OnStart(WorldState state) { }
+
+    protected override void OnComplete(WorldState state)
     {
         // ESTO ES LO QUE TE FALTABA EN RUNTIME:
         state["TradeRequested"] = true;
@@ -37,10 +39,6 @@ public class ARequestTrade : GOAPAction
         state["TradeFoodAmount"] = foodAmount;
 
         Debug.Log($"[{self.agentId}] ARequestTrade runtime wrote TradePartnerId={state["TradePartnerId"]}");
-    }
-
-    protected override void OnComplete(WorldState state)
-    {
 
         SocialBoard.Instance.Send(new SocialMessage
         {

@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 040ec0f7dfe31644db7269cabb041202, type: 3}
-  m_Name: AgentB
-  m_EditorClassIdentifier: Assembly-CSharp::GOADAgentConfiguration
+  m_Script: {fileID: 11500000, guid: fd19572b7dee15045ba70900732a9065, type: 3}
+  m_Name: BAGENTgOOD
+  m_EditorClassIdentifier: Assembly-CSharp::GOAPAgentConfig
   initialBools:
   - key: HasIncomingTradeRequest
     value: 0
@@ -19,7 +19,7 @@ MonoBehaviour:
     value: 0
   initialInts:
   - key: Food
-    value: 10
+    value: 5
   - key: Money
     value: 0
   goals:
