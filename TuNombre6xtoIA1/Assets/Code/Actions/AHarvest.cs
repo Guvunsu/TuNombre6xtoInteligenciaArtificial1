@@ -42,7 +42,7 @@ public class AHarvest : GOAPAction
         if (animator != null)
         {
             animator.SetBool("IsWorking", true);
-            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
         }
     }
 
@@ -54,7 +54,7 @@ public class AHarvest : GOAPAction
         if (animator != null)
         {
             animator.SetBool("IsWorking", false);
-            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.SADNESS);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.SADNESS);
         }
         state["AgentIsClose"] = true;
         state["GetMoney"] = true;

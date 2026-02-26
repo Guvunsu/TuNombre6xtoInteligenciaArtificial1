@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static UICanvasEmotions;
 
 public class AMoveToAgent : GOAPAction
 {
@@ -7,10 +8,14 @@ public class AMoveToAgent : GOAPAction
 
     private NavMeshAgent nav;
     private Transform target;
+    private Animator animator;
+    [SerializeField] UICanvasEmotions script_UICanvasEmotions;
 
     private void Awake()
     {
         nav = GetComponent<NavMeshAgent>();
+        animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
 
         duration = 0f;
         cost = 1f;
@@ -22,7 +27,12 @@ public class AMoveToAgent : GOAPAction
     }
 
     protected override void OnStart(WorldState state)
-    {
+    { 
+        if (animator != null )
+        {
+            animator.SetBool("IsWalking", true);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
+        }
         if (!state.ContainsKey(PartnerKey))
         {
             Debug.LogError("No TradePartnerId in state! Keys:");
@@ -66,18 +76,26 @@ public class AMoveToAgent : GOAPAction
         if (nav == null || target == null) return false;
         if (nav.pathPending) return false;
 
-        if (nav.remainingDistance <= nav.stoppingDistance)
+        if (nav.remainingDistance <= nav.stoppingDistance &&
+            nav.velocity.sqrMagnitude < 0.01f)
         {
-            if (!nav.hasPath || nav.velocity.sqrMagnitude < 0.01f)
-                return true;
+            if (animator != null)
+                animator.SetBool("IsWalking", false);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.SADNESS);
+            return true;
         }
-        return false;
+
+        return false; 
     }
 
     protected override void OnComplete(WorldState state)
     {
-        if (nav != null) nav.isStopped = true;
-        state["IsNearPartner"] = true;
-        Debug.Log("Arrived to partner.");
+        if (nav != null)
+        {
+            nav.isStopped = true;
+            nav.ResetPath();
+            state["IsNearPartner"] = true;
+            Debug.Log("Arrived to partner.");
+        }
     }
 }

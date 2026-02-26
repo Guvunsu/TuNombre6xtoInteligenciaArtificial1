@@ -4,15 +4,19 @@
 // - Ejecuta el trade en SocialBoard y limpia flags para evitar quedarse pegado.
 // ===============================
 using UnityEngine;
+using static UICanvasEmotions;
 
 public class AExecuteTrade : GOAPAction
 {
     private GOAPAgent self;
+    private Animator animator;
+    [SerializeField] UICanvasEmotions script_UICanvasEmotions;
 
     private void Awake()
     {
         self = GetComponent<GOAPAgent>();
-
+        animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
         duration = 0.2f;
         cost = 1f;
 
@@ -32,8 +36,13 @@ public class AExecuteTrade : GOAPAction
     }
 
 
-    protected override void OnStart(WorldState state) { }
-
+    protected override void OnStart(WorldState state) {
+        if (animator != null)
+        {
+            animator.SetBool("IsTrading", true);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
+        }
+    }
     protected override void OnComplete(WorldState state)
     {
         string partnerId = state.ContainsKey("TradePartnerId") ? state["TradePartnerId"]?.ToString() : null;
@@ -46,6 +55,11 @@ public class AExecuteTrade : GOAPAction
         {
             ok = SocialBoard.Instance.ExecuteTrade(self.agentId, partnerId, price, foodAmount);
         }
+        if (animator != null)
+        {
+            animator.SetBool("IsTrading", false);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+        }
 
         state["TradeCompleted"] = ok;
 
@@ -54,7 +68,5 @@ public class AExecuteTrade : GOAPAction
         state["HasIncomingTradeRequest"] = false;
         state["IsNearPartner"] = false;
         state["TradeRequested"] = false;
-
-
     }
 }

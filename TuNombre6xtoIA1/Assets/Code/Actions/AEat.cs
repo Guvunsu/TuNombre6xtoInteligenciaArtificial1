@@ -3,6 +3,7 @@
 // - Requiere Food >= foodConsumed y luego consume comida.
 // ===============================
 using UnityEngine;
+using static UICanvasEmotions;
 
 public class AEat : GOAPAction
 {
@@ -10,10 +11,11 @@ public class AEat : GOAPAction
     public float eatDuration = 2.0f;
 
     private Animator animator;
-
+    [SerializeField] UICanvasEmotions script_UICanvasEmotions;
     private void Awake()
     {
         animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
 
         duration = eatDuration;
         cost = 1f;
@@ -33,16 +35,19 @@ public class AEat : GOAPAction
     protected override void OnStart(WorldState state)
     {
         if (animator != null)
+        {
             animator.SetBool("IsEating", true);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
+        }
     }
-
     protected override void OnComplete(WorldState state)
     {
         if (animator != null)
+        {
             animator.SetBool("IsEating", false);
-
-        state["IsFull"] = true;
-
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+            state["IsFull"] = true;
+        }
         foreach (var e in NumericEffects)
             e.Apply(state);
     }

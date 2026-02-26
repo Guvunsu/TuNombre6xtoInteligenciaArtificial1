@@ -1,9 +1,14 @@
 using UnityEngine;
+using static UICanvasEmotions;
 
 public class AWaitForTradeAcceptance : GOAPAction
 {
+    private Animator animator;
+    [SerializeField] UICanvasEmotions script_UICanvasEmotions;
     private void Awake()
     {
+        animator = GetComponent<Animator>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
         // No usamos duration para terminar; terminamos por condición.
         duration = 0f;
         cost = 0.1f;
@@ -21,8 +26,14 @@ public class AWaitForTradeAcceptance : GOAPAction
         AddEffect("TradeAcceptedByPartner", true);
     }
 
-    protected override void OnStart(WorldState state) { }
-
+    protected override void OnStart(WorldState state)
+    {
+        if (animator != null)
+        {
+            animator.SetBool("IsTrading", true);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+        }
+    }
     protected override bool CheckComplete(WorldState state, float t01, float elapsed)
     {
         // En runtime no “inventamos” la aceptación.
@@ -33,6 +44,11 @@ public class AWaitForTradeAcceptance : GOAPAction
 
     protected override void OnComplete(WorldState state)
     {
+        if (animator != null)
+        {
+            animator.SetBool("IsTrading", false);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
+        }
         // No hacemos nada: solo “esperar”.
     }
 }

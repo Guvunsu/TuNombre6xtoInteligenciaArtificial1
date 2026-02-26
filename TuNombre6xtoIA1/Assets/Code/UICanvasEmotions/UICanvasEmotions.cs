@@ -16,14 +16,28 @@ public class UICanvasEmotions : MonoBehaviour
     public GameObject sadnessImg;
     public GameObject busyImg;
 
-    public void SetMood(EmotionReferenceInAgent mood)
+    public void SetModeDesactivation()
     {
         happinessImg.SetActive(false);
         sadnessImg.SetActive(false);
         busyImg.SetActive(false);
-
-        if (mood == EmotionReferenceInAgent.HAPPYNESS) happinessImg.SetActive(true);
-        else if (mood == EmotionReferenceInAgent.SADNESS) sadnessImg.SetActive(true);
-        else if (mood == EmotionReferenceInAgent.BUSY) busyImg.SetActive(true);
+    }
+    public void SetMood(EmotionReferenceInAgent mood)
+    {
+        if (mood == EmotionReferenceInAgent.HAPPYNESS)
+        {
+            SetModeDesactivation();
+            happinessImg.SetActive(true);
+        }
+        else if (mood == EmotionReferenceInAgent.SADNESS)
+        {
+            SetModeDesactivation();
+            sadnessImg.SetActive(true);
+        }
+        else if (mood == EmotionReferenceInAgent.BUSY)
+        {
+            SetModeDesactivation();
+            busyImg.SetActive(true);
+        }
     }
 }

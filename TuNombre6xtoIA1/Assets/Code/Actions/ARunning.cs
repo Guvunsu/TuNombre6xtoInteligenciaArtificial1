@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
+using static UICanvasEmotions;
+
 public class ARunning : GOAPAction
 {
     private Animator animator;
@@ -12,9 +14,6 @@ public class ARunning : GOAPAction
         animator = GetComponent<Animator>();
         script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
         duration = eatDuration;
-        AddNumericPrecondition("Food", CompareOp.GreaterOrEqual, foodConsumed);
-        AddEffect("IsFull", true);
-        AddNumericEffect("Food", EffectOp.Subtract, foodConsumed);
 
         AddPrecondition("AgentIsClose", true);
 
@@ -37,12 +36,12 @@ public class ARunning : GOAPAction
     }
     protected override void OnStart(WorldState state)
     {
-        Debug.Log("AEat: start");
+        Debug.Log("ARunning: start");
         ResetAnimations();
         if (animator != null)
         {
-            animator.SetBool("IsEating", true);
-            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+            animator.SetBool("IsRunning", true);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
         }
     }
     protected override void OnTick(WorldState state, float t01, float elapsed)
@@ -52,11 +51,11 @@ public class ARunning : GOAPAction
     }
     protected override void OnComplete(WorldState state)
     {
-        Debug.Log("AEat: complete");
+        Debug.Log("ARunning: complete");
         if (animator != null)
         {
-            animator.SetBool("IsEating", false);
-            //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
+            animator.SetBool("IsRunning", false);
+            script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.BUSY);
         }
         state["IsFull"] = true;
         foreach (var e in NumericEffects)
