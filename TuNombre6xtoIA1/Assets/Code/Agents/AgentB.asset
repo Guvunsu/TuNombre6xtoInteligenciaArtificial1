@@ -15,13 +15,16 @@ MonoBehaviour:
   initialBools:
   - key: HasIncomingTradeRequest
     value: 0
-  - key: TradeAcceptByPartner
-    value: 0
-  - key: IsNearPartner
+  - key: TradeRequested
     value: 0
   initialInts:
   - key: Food
     value: 10
   - key: Money
     value: 0
-  goals: []
+  goals:
+  - name: AcceptTrade
+    priority: 10
+    desiredBools:
+    - key: TradeAccepted
+      value: 1

@@ -8,7 +8,7 @@ public class AHarvest : GOAPAction
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
         duration = 10f;
         AddPrecondition("AgentIsClose", true);
 

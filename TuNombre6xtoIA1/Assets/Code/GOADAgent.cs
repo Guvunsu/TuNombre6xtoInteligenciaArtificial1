@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 
 public class GOADAgent : MonoBehaviour
@@ -6,7 +6,7 @@ public class GOADAgent : MonoBehaviour
     [Header("Config")]
     [SerializeField] private GOADAgentConfiguration config;
 
-    [Header("Social")]
+    [Header("Identity")]
     public string agentId = "AgentA";
 
     public WorldState worldState = new WorldState();
@@ -22,51 +22,63 @@ public class GOADAgent : MonoBehaviour
         actions.AddRange(GetComponents<GOAPAction>());
         ApplyConfig();
 
-        SocialBoard.Instance.Register(this);
+        Debug.Log($"[{agentId}] Awake. Acciones encontradas: {actions.Count}");
     }
 
     private void Start()
     {
+        if (SocialBoard.Instance != null)
+        {
+            SocialBoard.Instance.Register(this);
+            Debug.Log($"[{agentId}] Registrado en SocialBoard");
+        } else
+        {
+            Debug.LogError($"[{agentId}] SocialBoard.Instance es NULL");
+        }
+
         SetPlan();
     }
 
     private void Update()
     {
-        // 1) primero procesa mensajes entrantes (convierte eventos -> estado)
-        SocialBoard.Instance.PumpInboxIntoWorldState(this);
+        if (SocialBoard.Instance != null)
+            SocialBoard.Instance.PumpInboxIntoWorldState(this);
 
-        // 2) ejecuta GOAP
         if (currentPlan == null || currentPlan.Count == 0)
         {
+            Debug.Log($"[{agentId}] No tengo plan. Intentando replanear...");
             SetPlan();
             if (currentPlan == null || currentPlan.Count == 0)
                 return;
         }
 
         GOAPAction action = currentPlan.Peek();
+        Debug.Log($"[{agentId}] Ejecutando acci�n: {action.GetType().Name}");
+
         bool done = action.Perform(worldState);
 
         if (done)
         {
+            Debug.Log($"[{agentId}] Acci�n completada: {action.GetType().Name}");
             currentPlan.Dequeue();
         }
     }
 
     private void ApplyConfig()
     {
-        if (config == null)
-        {
-            Debug.LogWarning("There is no GOAPConfig assigned!");
-            return;
-        }
-
         worldState.Clear();
 
         foreach (var b in config.initialBools)
+        {
             worldState[b.key] = b.value;
+            Debug.Log($"[{agentId}] Init Bool: {b.key} = {b.value}");
+        }
 
         foreach (var i in config.initialInts)
+        {
             worldState[i.key] = i.value;
+            Debug.Log($"[{agentId}] Init Int: {i.key} = {i.value}");
+        }
 
         goals.Clear();
         foreach (var gdef in config.goals)
@@ -74,36 +86,53 @@ public class GOADAgent : MonoBehaviour
             var g = new GOAPGoal(gdef.name, gdef.priority);
             foreach (var kv in gdef.desiredBools)
                 g.DesiredState[kv.key] = kv.value;
+
             goals.Add(g);
+
+            Debug.Log($"[{agentId}] Goal cargado: {gdef.name}");
         }
+
+        // Defaults para claves de interacci�n social (evita ContainsKey missing)
+        if (!worldState.ContainsKey("TradePartnerId")) worldState["TradePartnerId"] = "";
+        if (!worldState.ContainsKey("TradePrice")) worldState["TradePrice"] = 0;
+        if (!worldState.ContainsKey("TradeFoodAmount")) worldState["TradeFoodAmount"] = 0;
+
+        // Tambi�n es buena idea asegurar flags usados por precondiciones
+        if (!worldState.ContainsKey("TradeRequested")) worldState["TradeRequested"] = false;
+        if (!worldState.ContainsKey("TradeAcceptedByPartner")) worldState["TradeAcceptedByPartner"] = false;
+        if (!worldState.ContainsKey("IsNearPartner")) worldState["IsNearPartner"] = false;
+        if (!worldState.ContainsKey("HasIncomingTradeRequest")) worldState["HasIncomingTradeRequest"] = false;
+
     }
 
     private void SetPlan()
     {
-        if (goals.Count == 0)
-        {
-            currentPlan = null;
-            return;
-        }
-
         foreach (var a in actions)
             a.ResetAction();
 
         GOAPGoal goal = ChooseGoal();
         if (goal == null)
         {
+            Debug.LogWarning($"[{agentId}] SetPlan: No goal activo (�ya satisfechos o no hay goals?)");
             currentPlan = null;
             return;
         }
 
-        currentPlan = planner.Plan(worldState, actions, goal);
+        Debug.Log($"[{agentId}] SetPlan: Planeando goal={goal.Name} con {actions.Count} acciones...");
 
-        if (currentPlan == null || currentPlan.Count == 0)
+        currentPlan = planner.Plan(worldState, actions, goal, agentId);
+
+        if (currentPlan == null)
         {
-            currentPlan = null;
+            Debug.LogWarning($"[{agentId}] SetPlan: planner devolvi� NULL");
             return;
         }
+
+        Debug.Log($"[{agentId}] SetPlan: plan tiene {currentPlan.Count} pasos");
+        foreach (var a in currentPlan)
+            Debug.Log($"[{agentId}]  -> {a.GetType().Name}");
     }
+
 
     private GOAPGoal ChooseGoal()
     {

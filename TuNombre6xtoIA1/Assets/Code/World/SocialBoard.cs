@@ -1,21 +1,11 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 
-/// <summary>
-/// Sistema social global.
-/// Permite:
-/// - registrar agentes
-/// - enviar mensajes
-/// - ejecutar interacciones atómicas (trade)
-/// </summary>
 public class SocialBoard : MonoBehaviour
 {
     public static SocialBoard Instance { get; private set; }
 
-    // Agentes registrados por id
     private readonly Dictionary<string, GOADAgent> agents = new();
-
-    // Buzón de mensajes por agente
     private readonly Dictionary<string, Queue<SocialMessage>> inbox = new();
 
     private void Awake()
@@ -26,43 +16,72 @@ public class SocialBoard : MonoBehaviour
             return;
         }
         Instance = this;
+
+        Debug.Log("[SocialBoard] Awake");
     }
 
     public void Register(GOADAgent agent)
     {
+        if (agent == null) return;
+
         agents[agent.agentId] = agent;
+
         if (!inbox.ContainsKey(agent.agentId))
             inbox[agent.agentId] = new Queue<SocialMessage>();
+
+        Debug.Log($"[SocialBoard] Registered agentId={agent.agentId} (total={agents.Count})");
     }
 
     public GOADAgent GetAgent(string id)
     {
+        if (string.IsNullOrEmpty(id))
+        {
+            Debug.LogWarning("[SocialBoard] GetAgent called with null/empty id");
+            return null;
+        }
+
         agents.TryGetValue(id, out var a);
+        Debug.Log($"[SocialBoard] GetAgent({id}) -> {(a != null)}");
         return a;
     }
 
-    /// <summary>
-    /// Envía un mensaje a otro agente.
-    /// </summary>
     public void Send(SocialMessage msg)
     {
+        Debug.Log($"[SocialBoard] Send {msg.type} from={msg.fromAgentId} to={msg.toAgentId} price={msg.price} food={msg.foodAmount}");
+
+        if (string.IsNullOrEmpty(msg.toAgentId))
+        {
+            Debug.LogWarning("[SocialBoard] Message has no receiver (toAgentId empty).");
+            return;
+        }
+
         if (!inbox.ContainsKey(msg.toAgentId))
-            inbox[msg.toAgentId] = new Queue<SocialMessage>();
+        {
+            Debug.LogWarning($"[SocialBoard] Inbox not found for {msg.toAgentId}. Is that agent registered?");
+            return;
+        }
 
         inbox[msg.toAgentId].Enqueue(msg);
     }
 
     /// <summary>
-    /// Convierte mensajes entrantes en cambios del WorldState.
+    /// Convierte mensajes -> flags/datos en el WorldState del receptor.
+    /// Esto es el puente Event -> State para que GOAP pueda reaccionar.
     /// </summary>
     public void PumpInboxIntoWorldState(GOADAgent receiver)
     {
+        if (receiver == null) return;
+
         if (!inbox.TryGetValue(receiver.agentId, out var q))
+        {
+            Debug.LogWarning($"[SocialBoard] No inbox for receiver={receiver.agentId}");
             return;
+        }
 
         while (q.Count > 0)
         {
             var msg = q.Dequeue();
+            Debug.Log($"[{receiver.agentId}] Received message {msg.type} from={msg.fromAgentId}");
 
             if (msg.type == SocialMessageType.TradeRequest)
             {
@@ -70,8 +89,7 @@ public class SocialBoard : MonoBehaviour
                 receiver.worldState["TradePartnerId"] = msg.fromAgentId;
                 receiver.worldState["TradePrice"] = msg.price;
                 receiver.worldState["TradeFoodAmount"] = msg.foodAmount;
-            }
-            else if (msg.type == SocialMessageType.TradeAccepted)
+            } else if (msg.type == SocialMessageType.TradeAccepted)
             {
                 receiver.worldState["TradeAcceptedByPartner"] = true;
                 receiver.worldState["TradePartnerId"] = msg.fromAgentId;
@@ -80,25 +98,48 @@ public class SocialBoard : MonoBehaviour
     }
 
     /// <summary>
-    /// Ejecuta un trade real entre dos agentes.
+    /// Ejecuta el trade de forma atï¿½mica:
+    /// buyer paga Money, seller entrega Food.
     /// </summary>
     public bool ExecuteTrade(string buyerId, string sellerId, int price, int foodAmount)
     {
+        Debug.Log($"[SocialBoard] ExecuteTrade buyer={buyerId} seller={sellerId} price={price} foodAmount={foodAmount}");
+
         var buyer = GetAgent(buyerId);
         var seller = GetAgent(sellerId);
-        if (buyer == null || seller == null) return false;
+
+        if (buyer == null || seller == null)
+        {
+            Debug.LogWarning("[SocialBoard] ExecuteTrade failed: buyer or seller not found.");
+            return false;
+        }
 
         int buyerMoney = buyer.worldState.GetInt("Money", 0);
         int sellerFood = seller.worldState.GetInt("Food", 0);
 
-        if (buyerMoney < price) return false;
-        if (sellerFood < foodAmount) return false;
+        Debug.Log($"[SocialBoard] buyerMoney={buyerMoney}, sellerFood={sellerFood}");
 
+        if (buyerMoney < price)
+        {
+            Debug.LogWarning("[SocialBoard] ExecuteTrade failed: buyer has not enough money.");
+            return false;
+        }
+
+        if (sellerFood < foodAmount)
+        {
+            Debug.LogWarning("[SocialBoard] ExecuteTrade failed: seller has not enough food.");
+            return false;
+        }
+
+        // buyer: -Money, +Food
         buyer.worldState["Money"] = buyerMoney - price;
         buyer.worldState["Food"] = buyer.worldState.GetInt("Food", 0) + foodAmount;
 
+        // seller: +Money, -Food
         seller.worldState["Money"] = seller.worldState.GetInt("Money", 0) + price;
         seller.worldState["Food"] = sellerFood - foodAmount;
+
+        Debug.Log($"[SocialBoard] Trade OK. buyer Money={buyer.worldState.GetInt("Money")} Food={buyer.worldState.GetInt("Food")} | seller Money={seller.worldState.GetInt("Money")} Food={seller.worldState.GetInt("Food")}");
 
         return true;
     }

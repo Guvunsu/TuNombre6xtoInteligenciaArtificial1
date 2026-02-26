@@ -8,7 +8,7 @@ public class ASleep : GOAPAction
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
         duration = 7;
 
         AddPrecondition("IsTired", true);
@@ -58,6 +58,6 @@ public class ASleep : GOAPAction
             //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
         }
         state["AgentIsClose"] = true;
-        state["IsTired"] = true;
+        state["IsTired"] = false;
     }
 }

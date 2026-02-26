@@ -15,9 +15,13 @@ MonoBehaviour:
   initialBools:
   - key: IsFull
     value: 0
+  - key: IsNearPartner
+    value: 0
   - key: HasIncomingTradeRequest
     value: 0
-  - key: TradeAcceptByPartner
+  - key: TradeRequested
+    value: 0
+  - key: TradeAcceptedByPartner
     value: 0
   initialInts:
   - key: Food
@@ -29,4 +33,4 @@ MonoBehaviour:
     priority: 10
     desiredBools:
     - key: IsFull
-      value: 1
+      value: 0

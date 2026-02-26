@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.AI;
 
 public class AMoveToTarget : GOAPAction
@@ -8,28 +8,21 @@ public class AMoveToTarget : GOAPAction
 
     public string targetName;
 
-    //tarea 09 02 2026
-    private Animator animator;
-    private UICanvasEmotions script_UICanvasEmotions;
-
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        //tarea 09 02 2026
-        animator = GetComponent<Animator>();
-        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
 
         // duration = 0 => no termina por tiempo, termina por CheckComplete()
-        duration = 3f;
+        duration = 0f;
 
-        // Este move lo usamos como acción genérica de "acercarse"
+        // Este move lo usamos como acciï¿½n genï¿½rica de "acercarse"
         AddEffect("AgentIsClose", true);
         cost = 1f;
     }
 
     protected override void OnReset()
     {
-        // si quieres, limpiar destino/flags aquí
+        // si quieres, limpiar destino/flags aquï¿½
         if (agent != null) agent.isStopped = false;
     }
 
@@ -51,22 +44,12 @@ public class AMoveToTarget : GOAPAction
 
         agent.isStopped = false;
         agent.SetDestination(target.position);
-        //tarea 09 02 2026
-        if (animator != null)
-            animator.SetBool("IsWalking", true);
-
-        agent.isStopped = false;
-        agent.SetDestination(target.position);
     }
 
     protected override void OnTick(WorldState state, float t01, float elapsed)
     {
-        // Si quieres, aquí actualizas animación de caminar (opcional)
+        // Si quieres, aquï¿½ actualizas animaciï¿½n de caminar (opcional)
         // Ej: animator.SetFloat("Speed", agent.velocity.magnitude);
-
-        //tarea 09 02 2026
-        if (animator != null)
-            animator.SetFloat("Speed", agent.velocity.magnitude);
     }
 
     protected override bool CheckComplete(WorldState state, float t01, float elapsed)
@@ -76,7 +59,7 @@ public class AMoveToTarget : GOAPAction
 
         if (agent.pathPending) return false;
 
-        // Llegó
+        // Llegï¿½
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             // A veces falta checar velocity para evitar falsos positivos
@@ -93,10 +76,6 @@ public class AMoveToTarget : GOAPAction
 
         if (agent != null)
             agent.isStopped = true;
-
-        //tarea 09 02 2026
-        if (animator != null)
-            animator.SetBool("IsWalking", false);
 
         state["AgentIsClose"] = true;
     }

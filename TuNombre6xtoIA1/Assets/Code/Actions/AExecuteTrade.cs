@@ -1,3 +1,8 @@
+ï»¿// ===============================
+// AExecuteTrade.cs (CORREGIDO)
+// - Se ejecuta cuando estï¿½s cerca y el partner ya aceptï¿½.
+// - Ejecuta el trade en SocialBoard y limpia flags para evitar quedarse pegado.
+// ===============================
 using UnityEngine;
 
 public class AExecuteTrade : GOAPAction
@@ -7,37 +12,49 @@ public class AExecuteTrade : GOAPAction
     private void Awake()
     {
         self = GetComponent<GOADAgent>();
+
         duration = 0.2f;
+        cost = 1f;
 
         AddPrecondition("IsNearPartner", true);
         AddPrecondition("TradeAcceptedByPartner", true);
 
-        // Esto es solo “señal”, el cambio real lo hace SocialBoard.ExecuteTrade
+        // Marcador
         AddEffect("TradeCompleted", true);
-        cost = 1f;
+
+        // Para que el planner pueda ver que obtienes comida
+        AddNumericEffect("Food", EffectOp.Add, 1);
+
+        // CLAVE: ï¿½consumirï¿½ el handshake para evitar loops en el planner
+        AddEffect("TradeAcceptedByPartner", false);
+        AddEffect("IsNearPartner", false);
+        AddEffect("TradeRequested", false);
     }
+
 
     protected override void OnStart(WorldState state) { }
 
     protected override void OnComplete(WorldState state)
     {
-        if (self == null) return;
-
         string partnerId = state.ContainsKey("TradePartnerId") ? state["TradePartnerId"]?.ToString() : null;
         int price = state.GetInt("TradePrice", 5);
         int foodAmount = state.GetInt("TradeFoodAmount", 1);
 
-        if (string.IsNullOrEmpty(partnerId)) return;
+        bool ok = false;
 
-        // self = buyer, partner = seller (para este ejemplo)
-        bool ok = SocialBoard.Instance.ExecuteTrade(self.agentId, partnerId, price, foodAmount);
+        if (SocialBoard.Instance != null && self != null && !string.IsNullOrEmpty(partnerId))
+        {
+            ok = SocialBoard.Instance.ExecuteTrade(self.agentId, partnerId, price, foodAmount);
+        }
 
-        // limpia flags locales
+        state["TradeCompleted"] = ok;
+
+        // Limpieza
         state["TradeAcceptedByPartner"] = false;
+        state["HasIncomingTradeRequest"] = false;
+        state["IsNearPartner"] = false;
         state["TradeRequested"] = false;
 
-        // (opcional) si el trade falló, podrías setear algún flag de error
-        if (!ok)
-            state["TradeFailed"] = true;
+
     }
 }

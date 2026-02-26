@@ -5,16 +5,12 @@ public class ASitTalking : GOAPAction
     private Animator animator;
     private UICanvasEmotions script_UICanvasEmotions;
 
-    public int foodConsumed = 1;
-    public float eatDuration = 0;
+    public float sitTalkingDuration = 13f;
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
-        duration = eatDuration;
-        AddNumericPrecondition("Food", CompareOp.GreaterOrEqual, foodConsumed);
-        AddEffect("IsFull", true);
-        AddNumericEffect("Food", EffectOp.Subtract, foodConsumed);
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
+        duration = sitTalkingDuration;
 
         AddPrecondition("AgentIsClose", true);
 
@@ -32,14 +28,16 @@ public class ASitTalking : GOAPAction
         animator.SetBool("IsWorking", false);
         animator.SetBool("IsGetFood", false);
         animator.SetBool("IsEating", false);
+        animator.SetBool("Sit&Talking", true);
     }
     protected override void OnStart(WorldState state)
     {
-        Debug.Log("AEat: start");
+        state["AgentIsClose"] = false;
+        Debug.Log("Sit&Talking: start");
         ResetAnimations();
         if (animator != null)
         {
-            animator.SetBool("IsEating", true);
+            animator.SetBool("Sit&Talking", true);
             //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
         }
     }
@@ -50,16 +48,16 @@ public class ASitTalking : GOAPAction
     }
     protected override void OnComplete(WorldState state)
     {
-        Debug.Log("AEat: complete");
+        Debug.Log("Sit&Talking: complete");
         if (animator != null)
         {
-            animator.SetBool("IsEating", false);
+            animator.SetBool("Sit&Talking", false);
             //script_UICanvasEmotions.SetMood(EmotionReferenceInAgent.HAPPYNESS);
         }
-        state["IsFull"] = true;
-        foreach (var e in NumericEffects)
-        {
-            e.Apply(state);
-        }
+        state["Sit&Talking"] = true;
+        state["AgentIsClose"] = true;
+        state["GetMoney"] = false;
+        state["IsFull"] = false;
+        state["IsTired"] = false;
     }
 }

@@ -8,7 +8,7 @@ public class AGetFood : GOAPAction
     private void Awake()
     {
         animator = GetComponent<Animator>();
-        script_UICanvasEmotions = GetComponent<UICanvasEmotions>();
+        script_UICanvasEmotions = GetComponentInChildren<UICanvasEmotions>();
         duration = 10;
 
         AddPrecondition("AgentIsClose", true);

@@ -1,7 +1,7 @@
-using System;
+ï»¿using System;
 
 /// <summary>
-/// Operadores de comparación para precondiciones numéricas.
+/// Operadores de comparaciï¿½n para precondiciones numï¿½ricas.
 /// Ejemplo: Food >= 1
 /// </summary>
 public enum CompareOp
@@ -15,7 +15,7 @@ public enum CompareOp
 }
 
 /// <summary>
-/// Tipos de efectos numéricos.
+/// Tipos de efectos numï¿½ricos.
 /// Ejemplo: Food += 1, Money -= 5
 /// </summary>
 public enum EffectOp
@@ -26,8 +26,8 @@ public enum EffectOp
 }
 
 /// <summary>
-/// Precondición numérica.
-/// Se evalúa contra el WorldState.
+/// Precondiciï¿½n numï¿½rica.
+/// Se evalï¿½a contra el WorldState.
 /// </summary>
 [Serializable]
 public struct GOAPCondition
@@ -37,7 +37,7 @@ public struct GOAPCondition
     public int intValue;
 
     /// <summary>
-    /// Evalúa la condición contra el estado actual.
+    /// Evalï¿½a la condiciï¿½n contra el estado actual.
     /// </summary>
     public bool Evaluate(WorldState state)
     {
@@ -57,7 +57,7 @@ public struct GOAPCondition
 }
 
 /// <summary>
-/// Efecto numérico que modifica el estado.
+/// Efecto numï¿½rico que modifica el estado.
 /// </summary>
 [Serializable]
 public struct GOAPNumericEffect
@@ -86,7 +86,7 @@ public struct GOAPNumericEffect
 
     /// <summary>
     /// Se usa SOLO en el planner para ver
-    /// si este efecto cambiaría el estado simulado.
+    /// si este efecto cambiarï¿½a el estado simulado.
     /// </summary>
     public bool WouldChange(WorldState state)
     {
