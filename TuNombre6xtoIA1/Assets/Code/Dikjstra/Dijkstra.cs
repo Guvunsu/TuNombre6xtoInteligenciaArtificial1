@@ -6,73 +6,109 @@ public class Dijkstra : MonoBehaviour
 {
     public Node[] nodes;
     public int start, end;
+    void Start()
+    {
+        CreateNeighbors();
+        CalculateDijkstra();
+    }
     void CalculateDijkstra()
     {
-        //1. inicializar
         float[] distances = new float[nodes.Length];
         int[] prev = new int[nodes.Length];
 
-        // limpiamos flags
-        foreach (Node node in nodes)
+        // Inicialización
+        for (int i = 0; i < nodes.Length; i++)
         {
-            node.locked = false;
-            node.parentIndex = -1;
+            distances[i] = Mathf.Infinity;
+            prev[i] = -1;
+            nodes[i].locked = false;
+        }
 
-            // la distancia de A -> A es 0, Ya estamos ahi
-            distances[start] = 0;
+        distances[start] = 0;
 
-            //2 loop principal
-            while (true)
+        while (true)
+        {
+            int bestNodeIndex = -1;
+            float bestDistance = Mathf.Infinity;
+
+            for (int i = 0; i < nodes.Length; i++)
             {
-                //buscamos el nodo NO visitando con menor distancia global
-                int bestNodeIndex = -1;
-                float bestDistance = Mathf.Infinity;
-                for (int i = 0; i < nodes.Length; i++)
+                if (!nodes[i].locked && distances[i] < bestDistance)
                 {
-                    if (!nodes[i].locked && distances[i] < bestDistance)
-                    {
-                        bestDistance = distances[i];
-                        bestNodeIndex = i;
-                    }
-                }
-                //si no hay candidato, no hay mas nodos alcanzables 
-                if (bestNodeIndex == -1) break;
-                //marcamos como visitado
-                nodes[bestNodeIndex].Lock();
-                //si ya llegamos al destino, paramos
-                if (bestNodeIndex == end) break;
-                //relajamos vecinos de bestNodeIndex
-                foreach (var entry in nodes[bestNodeIndex].neighbors)
-                {
-                    int n = entry.Key.index;
-                    if (nodes[n].locked) continue;
-
-                    //costo acumulado
-                    float alt = distances[bestNodeIndex] + entry.Value;
-                    //si encontramos un camino mejor, actualizamos
-                    if (alt < distances[n])
-                    {
-                        distances[n] = alt;
-                        prev[n] = bestNodeIndex;
-                        nodes[n].parentIndex = bestNodeIndex;
-                    }
+                    bestDistance = distances[i];
+                    bestNodeIndex = i;
                 }
             }
-            // 3) reconstruimos ruta (usando prev[])
-            List<int> path = new List<int>();
-            int currentNode = end;
 
-            // si Distance[end] es Infinity, no existre camino
-            if (distances[end] == Mathf.Infinity)
+            if (bestNodeIndex == -1) break;
+
+            nodes[bestNodeIndex].Lock();
+
+            if (bestNodeIndex == end) break;
+
+            foreach (var entry in nodes[bestNodeIndex].neighbors)
             {
-                Debug.Log("No se enontraron caminos");
+                int n = entry.Key.index;
+
+                if (nodes[n].locked) continue;
+
+                float alt = distances[bestNodeIndex] + entry.Value;
+
+                if (alt < distances[n])
+                {
+                    distances[n] = alt;
+                    prev[n] = bestNodeIndex;
+                    nodes[n].parentIndex = bestNodeIndex;
+                }
             }
-            while (currentNode != null)
+        }
+
+        // Reconstrucción del camino
+        List<int> path = new List<int>();
+        int currentNode = end;
+
+        if (distances[end] == Mathf.Infinity)
+        {
+            Debug.Log("No se encontraron caminos");
+            return;
+        }
+
+        while (currentNode != -1)
+        {
+            path.Add(currentNode);
+            currentNode = prev[currentNode];
+        }
+
+        path.Reverse();
+
+        Debug.Log("Camino más corto:");
+
+        foreach (int i in path)
+        {
+            Debug.Log(nodes[i].name);
+        }
+    }
+    void CreateNeighbors()
+    {
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            nodes[i].ClearNeighbors();
+
+            for (int j = 0; j < nodes.Length; j++)
             {
-                path.Add(currentNode);
-                currentNode = prev[currentNode];
+                if (i == j) continue;
+
+                float dist = Vector3.Distance(
+                    nodes[i].transform.position,
+                    nodes[j].transform.position
+                );
+
+                if (dist < 100f)
+                {
+                    nodes[i].AddNeighbor(nodes[j], dist);
+                    Debug.Log("Distancia: " + dist);
+                }
             }
-            path.Reverse();
         }
     }
 }
