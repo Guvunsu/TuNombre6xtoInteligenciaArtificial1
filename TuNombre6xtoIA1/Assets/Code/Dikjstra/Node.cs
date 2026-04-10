@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Node : MonoBehaviour
 {
     public int index;
     public string tagName;
-    public int parentIndex = -1;
+
     public bool locked = false;
-    public float distance = Mathf.Infinity;
+    public int parentIndex;
 
     public Dictionary<Node, float> neighbors = new Dictionary<Node, float>();
-    public List<GameObject> edges = new List<GameObject>();
 
     public void Initialize(int index, string tagName)
     {
@@ -23,21 +22,24 @@ public class Node : MonoBehaviour
         locked = true;
     }
 
-    public void ClearNeighbors()
-    {
-        neighbors.Clear();
-    }
-
     public void AddNeighbor(Node node, float cost)
     {
-        if (node == null || node == this) return;
+        neighbors[node] = cost;
+    }
 
-        if (!neighbors.ContainsKey(node))
+    // 🔥 SELECCIÓN CON CLICK
+    void OnMouseDown()
+    {
+        Dijkstra manager = FindObjectOfType<Dijkstra>();
+
+        if (!manager.selectedNodes.Contains(this))
         {
-            neighbors.Add(node, cost);
+            manager.selectedNodes.Add(this);
+            Debug.Log("Seleccionado: " + index);
         }
     }
 
+    // 🔥 DIBUJAR CONEXIONES
     void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
@@ -47,17 +49,6 @@ public class Node : MonoBehaviour
             if (neighbor.Key != null)
             {
                 Gizmos.DrawLine(transform.position, neighbor.Key.transform.position);
-            }
-        }
-
-        if (parentIndex != -1)
-        {
-            Node parentNode = FindObjectOfType<Dijkstra>().nodes[parentIndex];
-
-            if (parentNode != null)
-            {
-                Gizmos.color = Color.yellow;
-                Gizmos.DrawLine(transform.position, parentNode.transform.position);
             }
         }
     }
