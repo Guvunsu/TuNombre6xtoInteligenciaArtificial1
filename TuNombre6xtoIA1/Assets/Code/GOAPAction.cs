@@ -4,7 +4,6 @@
 // ===============================
 using System.Collections.Generic;
 using UnityEngine;
-
 public abstract class GOAPAction : MonoBehaviour
 {
     public float cost = 1f;
