@@ -3,13 +3,21 @@
 public class UnitGenerator : MonoBehaviour
 {
     public int size = 4;
-    public GameObject[] grid;
     public GameObject cellprefb;
+    public GameObject[] grid;
+
+    public AStar aStar;
     void Start()
     {
         grid = new GameObject[size * size];
         GenerateGrid();
-        CreteNeighboor();
+        CreateNeighborhood();
+
+        Cell[] cells = new Cell[grid.Length];
+        for (int i = 0; i < grid.Length; i++)
+            cells[i] = grid[i].GetComponent<Cell>();
+
+        aStar.allCells = cells;
     }
     void GenerateGrid()
     {
@@ -27,62 +35,54 @@ public class UnitGenerator : MonoBehaviour
             }
         }
     }
-    void CreteNeighboor()
+    void CreateNeighborhood()
     {
         int temp_index;
 
-        //esquina izq up 
+        // LD
         grid[0].GetComponent<Cell>().SetNeigbor(size, 1, -1, -1);
+        // RD
         temp_index = size - 1;
-        //  esquina derecha abajo
         grid[temp_index].GetComponent<Cell>().SetNeigbor(temp_index + size, -1, -1, temp_index - 1);
+        // LU
         temp_index = (size * size) - size;
-        //esquina izquierdo arriba
         grid[temp_index].GetComponent<Cell>().SetNeigbor(-1, temp_index + 1, temp_index - size, -1);
-        //esquina  derecho arriba
+        // RU
         temp_index = (size * size) - 1;
         grid[temp_index].GetComponent<Cell>().SetNeigbor(-1, -1, temp_index - size, temp_index - 1);
 
-        //bottom
+        // Botton
         for (int i = 1; i < size - 1; i++)
-        {
-            grid[0].GetComponent<Cell>().SetNeigbor(i + size, i + 1, -1, i - 1);
-        }
-        //top
+            grid[i].GetComponent<Cell>().SetNeigbor(i + size, i + 1, -1, i - 1);
+        // Top
         temp_index = (size * size) - size + 1;
         for (int i = temp_index; i < (size * size) - 1; i++)
-        {
+            grid[i].GetComponent<Cell>().SetNeigbor(-1, i + 1, i - size, i - 1);
+
+        // L
+        int temp_limit = (size * size) - size;
+        for (int i = size; i < temp_limit; i += size)
             grid[i].GetComponent<Cell>().SetNeigbor(i + size, i + 1, i - size, -1);
-        }
-        //left 
-        temp_index = (size * size) - size;
-        for (int i = temp_index; i < (size * size); i += size)
-        {
-            grid[i].GetComponent<Cell>().SetNeigbor(i + size, i + 1, i - size, -1);
-        }
-        //right
-        temp_index = (size * size) - 1;
-        for (int i = temp_index; i < (size * size); i += size)
-        {
+        // R
+        temp_limit = (size * size) - 1;
+        temp_index = (2 * size) - 1;
+        for (int i = temp_index; i < temp_limit; i += size)
             grid[i].GetComponent<Cell>().SetNeigbor(i + size, -1, i - size, i - 1);
-        }
 
-        //center
 
-        for (int i = 0; i < grid.Length; i++)
+        for (int i = 0; i < grid.Length; ++i)
         {
-            //east border =(i =size)-1
-
-
             Cell temp_cell = grid[i].GetComponent<Cell>();
-            if (temp_cell.dirty) break;
-            int n_index = i - size;
-            int e_index = i + 1;
-            int s_index = i + size;
-            int w_index = i - 1;
 
+            if (!temp_cell.dirty)
+            {
+                int n = i + size;
+                int e = i + 1;
+                int s = i - size;
+                int w = i - 1;
 
-            temp_cell.SetNeigbor(n_index, e_index, s_index, w_index);
+                temp_cell.SetNeigbor(n, e, s, w);
+            }
         }
     }
 }

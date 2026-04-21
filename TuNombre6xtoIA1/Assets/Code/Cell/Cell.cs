@@ -1,14 +1,19 @@
-using UnityEngine;
 using TMPro;
-using Unity.VisualScripting;
+using UnityEngine;
 
 public class Cell : MonoBehaviour
 {
-    public int index = 0;
-    public int idealDistance = 0;
+    private int g = 0;
+    private int h = 0;
+    private int f => g + h;
+
+    public Cell parent = null;
+
     public int[] neighborIndex = new int[4];
     public TMP_Text indexText;
-    public TMP_Text idealDistanceText;
+    public TMP_Text hText;
+    public TMP_Text gText;
+    public TMP_Text fText;
     public bool dirty = false;
     private MeshRenderer meshRenderer;
     public enum State
@@ -28,7 +33,7 @@ public class Cell : MonoBehaviour
     }
     public void SetIndex(int index)
     {
-        this.index = index;
+        this.g = index;
         indexText.text = index.ToString();
     }
     public void SetNeigbor(int n, int e, int s, int w)
@@ -38,11 +43,11 @@ public class Cell : MonoBehaviour
         neighborIndex[1] = e;
         neighborIndex[2] = s;
         neighborIndex[3] = w;
-        indexText.text = index.ToString();
+        indexText.text = g.ToString();
 
         dirty = true;
     }
-    public Color[] colors = new Color[4]; 
+    public Color[] colors = new Color[4];
     public void SetState(int stateIndex)
 
     {
@@ -52,15 +57,37 @@ public class Cell : MonoBehaviour
         {
             AStar.start = this;
         }
-        if(enum_state == State.END)
+        if (enum_state == State.END)
         {
             AStar.end = this;
         }
     }
-    public void SetIdealDistance(Vector3 endPosition)
+    public void SetH(Vector3 endPosition)
     {
         Vector3 cleanCoordinates = endPosition - transform.position;
-        idealDistance = (int)(cleanCoordinates.x + cleanCoordinates.z);
-        idealDistanceText.text = idealDistance.ToString();
+        h = Mathf.Abs((int)(cleanCoordinates.x) + Mathf.Abs((int)cleanCoordinates.z));
+        RefreshText();
     }
+    public void SetG(int value)
+    {
+        g = value;
+        RefreshText();
+
+    }
+    public void ResetPathData()
+    {
+        g = 0;
+        h = 0;
+        parent = null;
+        RefreshText();
+    }
+    void RefreshText()
+    {
+        hText.text = h.ToString();
+        gText.text = g.ToString();
+        fText.text = f.ToString();
+    }
+    public int F() { return f; }
+    public int H() { return h; }
+    public int G() { return g; }
 }

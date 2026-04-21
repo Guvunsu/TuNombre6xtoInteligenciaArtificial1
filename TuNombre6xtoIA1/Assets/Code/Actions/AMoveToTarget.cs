@@ -39,7 +39,7 @@ public class AMoveToTarget : GOAPAction
 
         Debug.Log("AMoveToTarget: moving to " + targetName);
 
-        // Al iniciar movimiento, ya no estamos "close"
+        // Al iniciar movimiento, ya no estamos "closeColor"
         state["AgentIsClose"] = false;
 
         agent.isStopped = false;

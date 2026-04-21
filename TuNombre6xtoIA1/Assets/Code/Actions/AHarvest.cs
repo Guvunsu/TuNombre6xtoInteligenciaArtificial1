@@ -33,7 +33,7 @@ public class AHarvest : GOAPAction
     }
     protected override void OnStart(WorldState state)
     {
-        // Al iniciar movimiento, ya no estamos "close"
+        // Al iniciar movimiento, ya no estamos "closeColor"
         state["AgentIsClose"] = false;
 
         Debug.Log("AHarvest: start");

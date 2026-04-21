@@ -153,9 +153,9 @@ RectTransform:
   - {fileID: 886375601}
   m_Father: {fileID: 322359352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 77, y: -79.952194}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &894518
@@ -594,10 +594,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9946189250c7f4aa2e50b6c92f3d6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Node
-  index: 0
-  tagName: 
-  locked: 0
-  parentIndex: -1
 --- !u!4 &214608166
 Transform:
   m_ObjectHideFlags: 0
@@ -942,9 +938,9 @@ RectTransform:
   - {fileID: 306660535}
   m_Father: {fileID: 916926619}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 79.81945, y: -15.0815}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 159.6389, y: 30.163}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &341112995
@@ -1153,9 +1149,9 @@ RectTransform:
   - {fileID: 1910812491}
   m_Father: {fileID: 322359352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 77, y: -15}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &834957855
@@ -1270,7 +1266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &872313817
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1711,7 +1707,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -2.1999512, y: 9.099976}
+  m_AnchoredPosition: {x: -2.1999512, y: 2.2000122}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &933047941
@@ -1786,9 +1782,9 @@ RectTransform:
   - {fileID: 1115276783}
   m_Father: {fileID: 322359352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 77, y: -112.42829}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &963577868
@@ -2414,9 +2410,9 @@ RectTransform:
   - {fileID: 1831745983}
   m_Father: {fileID: 322359352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 77, y: -47.476097}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1398508915
@@ -2622,9 +2618,9 @@ RectTransform:
   - {fileID: 1984830309}
   m_Father: {fileID: 322359352}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 77, y: -144.90439}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 154, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1678297900
@@ -2890,16 +2886,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UnitGenerator
   size: 8
-  grid:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   cellprefb: {fileID: 8824861843473243445, guid: 057ba0794ee8fd340a1178ec6f1bd850, type: 3}
+  grid: []
+  aStar: {fileID: 1887557928}
 --- !u!4 &1887557925
 Transform:
   m_ObjectHideFlags: 0
@@ -2939,6 +2928,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c62fe5f4c43ab649bf69ea76db1de9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AStar
+  allCells: []
+  openColor: {r: 0, g: 1, b: 1, a: 1}
+  closeColor: {r: 0.627451, g: 0.1254902, b: 0.9411765, a: 1}
+  path: {r: 1, g: 0.6470588, b: 0, a: 1}
+  currentColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1910812490
 GameObject:
   m_ObjectHideFlags: 0
@@ -3136,11 +3130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e95bf58905c7264796f2355c35c6a27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Dijkstra
-  nodes: []
-  selectedNodes: []
-  startIndex: -1
-  endIndex: -1
-  nodePrefab: {fileID: 3428985663543932794, guid: a7e61619e60df2a49a149552983292d3, type: 3}
 --- !u!4 &1954918959
 Transform:
   m_ObjectHideFlags: 0
