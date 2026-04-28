@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -73,7 +73,7 @@ public class AStar : MonoBehaviour
         PaintCell(current, currentColor);
 
         //llegamos al final?
-        if(current == end)
+        if (current == end)
         {
             searchDone = true;
             Debug.Log("Path Found");
@@ -81,12 +81,12 @@ public class AStar : MonoBehaviour
         }
         openSet.Remove(current);
         closeSet.Add(current);
-        PaintCell (current, currentColor);
+        PaintCell(current, currentColor);
 
         //evaluar vecinos
-        foreach(int neighborIndex in current.neighborIndex)
+        foreach (int neighborIndex in current.neighborIndex)
         {
-            if(neighborIndex < 0 || neighborIndex >= allCells.Length) { continue; }
+            if (neighborIndex < 0 || neighborIndex >= allCells.Length) { continue; }
             Cell neighbor = allCells[neighborIndex];
             if (neighbor.enum_state == Cell.State.OBSTACLE)
             {
@@ -95,15 +95,14 @@ public class AStar : MonoBehaviour
             if (closeSet.Contains(neighbor)) continue;
 
             int tentativeG = current.G() + 1;
-            if(!openSet.Contains(neighbor))
+            if (!openSet.Contains(neighbor))
             {
                 neighbor.SetG(tentativeG);
                 neighbor.SetH(end.transform.position);
                 neighbor.parent = current;
                 openSet.Add(neighbor);
                 PaintCell(neighbor, openColor);
-            }
-            else if (tentativeG < neighbor.G())
+            } else if (tentativeG < neighbor.G())
             {
                 neighbor.SetG(tentativeG);
                 neighbor.parent = current;
@@ -116,5 +115,23 @@ public class AStar : MonoBehaviour
     {
         if (cell == start || cell == end) return;
         cell.GetComponent<MeshRenderer>().material.color = color;
+    }
+
+    public List<Cell> GetPath()
+    {
+        List<Cell> path = new List<Cell>();
+
+        if (end == null) return path;
+
+        Cell current = end;
+
+        while (current != null)
+        {
+            path.Add(current);
+            current = current.parent;
+        }
+
+        path.Reverse();
+        return path;
     }
 }
