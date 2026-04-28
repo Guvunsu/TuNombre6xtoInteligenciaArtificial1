@@ -785,11 +785,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77f9fe0ac8636f942abd81b3aa106d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cell
+  parent: {fileID: 0}
   neighborIndex: 
   indexText: {fileID: 3723933583779107307}
-  hText: {fileID: 0}
-  gText: {fileID: 0}
-  fText: {fileID: 0}
+  hText: {fileID: 6470606080740470242}
+  gText: {fileID: 5201681774318475769}
+  fText: {fileID: 204926308715647867}
   dirty: 0
   enum_state: 0
   colors:
